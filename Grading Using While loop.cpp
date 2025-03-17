@@ -1,4 +1,4 @@
-// Grading system using while loop
+// Grading system using while loop by lexan
 
 #include <iostream>
 
