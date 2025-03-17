@@ -50,7 +50,7 @@ int main ( ) {
 		cout << " Please input correct marks \n " ;
 	}
 		
-		
+		// this is the end of the file 
 		i++ ;
 	}
 	
