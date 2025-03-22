@@ -1,5 +1,5 @@
 # Just around 11:45 am on 5 December 2024 was this file casually created by lexan-hacker
-# A simple age verification program ......
+# A simple age verification program .......
 
 print(" Welcome to A Simple Lexan Age Verification Using Python Language ")
 
