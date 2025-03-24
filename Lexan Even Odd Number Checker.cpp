@@ -2,7 +2,7 @@
 
 // This project was created on 5 December 2024 and it was such an amazing way to remember the past memories of this language 
 // Learning Cpp language is dedicated to Ibrahim Mavika who helped me 
-// I remembered it very easily ... By Lexan-hacker ...
+// I remembered it very easily ... By Lexan-hacker ....
 // I don't know why ... but why is this font so good ... Logged out of here at 14:56 pm 
 
 int main ( ) {
