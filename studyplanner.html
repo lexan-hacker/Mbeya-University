@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Study Planner</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .app-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .priority-high {
+            background-color: #ffdddd;
+        }
+        
+        .priority-medium {
+            background-color: #fff3cd;
+        }
+        
+        .status-completed {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: var(--success-color);
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .stat-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-card {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Student Study Planner</h1>
+            <p class="app-description">Organize your study sessions, track assignments, and manage your time effectively</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'dashboard')">Dashboard</button>
+            <button class="tab" onclick="openTab(event, 'assignments')">Assignments</button>
+            <button class="tab" onclick="openTab(event, 'study-sessions')">Study Sessions</button>
+            <button class="tab" onclick="openTab(event, 'resources')">Resources</button>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <h2>Study Overview</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="pending-assignments">0</div>
+                    <div class="stat-label">Pending Assignments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completed-sessions">0</div>
+                    <div class="stat-label">Completed Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="study-hours">0</div>
+                    <div class="stat-label">Study Hours</div>
+                </div>
+            </div>
+            
+            <h3>Weekly Progress</h3>
+            <div class="progress-container">
+                <div class="progress-bar" id="weekly-progress" style="width: 0%">0%</div>
+            </div>
+            
+            <h3>Upcoming Assignments</h3>
+            <table id="upcoming-assignments">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Course</th>
+                        <th>Due Date</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <h3>Recent Study Sessions</h3>
+            <table id="recent-sessions">
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Course</th>
+                        <th>Duration</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Assignments Tab -->
+        <div id="assignments" class="tab-content">
+            <h2>Manage Assignments</h2>
+            
+            <form id="assignment-form">
+                <div class="form-group">
+                    <label for="assignment-title">Title</label>
+                    <input type="text" id="assignment-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="assignment-course">Course</label>
+                    <input type="text" id="assignment-course" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="assignment-due-date">Due Date</label>
+                    <input type="date" id="assignment-due-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="assignment-priority">Priority</label>
+                    <select id="assignment-priority" required>
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="assignment-description">Description</label>
+                    <textarea id="assignment-description" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-success">Add Assignment</button>
+            </form>
+            
+            <h3>Your Assignments</h3>
+            <table id="all-assignments">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Course</th>
+                        <th>Due Date</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Study Sessions Tab -->
+        <div id="study-sessions" class="tab-content">
+            <h2>Plan Study Sessions</h2>
+            
+            <form id="session-form">
+                <div class="form-group">
+                    <label for="session-topic">Topic</label>
+                    <input type="text" id="session-topic" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="session-course">Course</label>
+                    <input type="text" id="session-course" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="session-date">Date</label>
+                    <input type="date" id="session-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="session-duration">Duration (minutes)</label>
+                    <input type="number" id="session-duration" min="15" value="60" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="session-notes">Notes</label>
+                    <textarea id="session-notes" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-success">Log Session</button>
+            </form>
+            
+            <h3>Your Study Sessions</h3>
+            <table id="all-sessions">
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Course</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Resources Tab -->
+        <div id="resources" class="tab-content">
+            <h2>Study Resources</h2>
+            
+            <form id="resource-form">
+                <div class="form-group">
+                    <label for="resource-title">Title</label>
+                    <input type="text" id="resource-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resource-course">Course</label>
+                    <input type="text" id="resource-course" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resource-url">URL</label>
+                    <input type="url" id="resource-url" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resource-type">Type</label>
+                    <select id="resource-type" required>
+                        <option value="video">Video</option>
+                        <option value="article">Article</option>
+                        <option value="book">Book</option>
+                        <option value="cheatsheet">Cheat Sheet</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resource-notes">Notes</label>
+                    <textarea id="resource-notes" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-success">Add Resource</button>
+            </form>
+            
+            <h3>Your Resources</h3>
+            <table id="all-resources">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Course</th>
+                        <th>Type</th>
+                        <th>URL</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+        let studySessions = JSON.parse(localStorage.getItem('studySessions')) || [];
+        let resources = JSON.parse(localStorage.getItem('resources')) || [];
+        
+        // DOM Elements
+        const assignmentForm = document.getElementById('assignment-form');
+        const sessionForm = document.getElementById('session-form');
+        const resourceForm = document.getElementById('resource-form');
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAssignments();
+            renderStudySessions();
+            renderResources();
+            updateDashboard();
+            
+            // Form event listeners
+            assignmentForm.addEventListener('submit', handleAssignmentSubmit);
+            sessionForm.addEventListener('submit', handleSessionSubmit);
+            resourceForm.addEventListener('submit', handleResourceSubmit);
+            
+            // Set default date to today for forms
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('session-date').value = today;
+            document.getElementById('assignment-due-date').value = today;
+        });
+        
+        // Tab functionality
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+        
+        // Assignment functions
+        function handleAssignmentSubmit(e) {
+            e.preventDefault();
+            
+            const assignment = {
+                id: Date.now(),
+                title: document.getElementById('assignment-title').value,
+                course: document.getElementById('assignment-course').value,
+                dueDate: document.getElementById('assignment-due-date').value,
+                priority: document.getElementById('assignment-priority').value,
+                description: document.getElementById('assignment-description').value,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            assignments.push(assignment);
+            saveAssignments();
+            renderAssignments();
+            updateDashboard();
+            
+            // Reset form
+            assignmentForm.reset();
+            document.getElementById('assignment-due-date').value = today;
+        }
+        
+        function renderAssignments() {
+            const tbody = document.querySelector('#all-assignments tbody');
+            tbody.innerHTML = '';
+            
+            // Sort by due date (earliest first)
+            assignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+            
+            assignments.forEach(assignment => {
+                const row = document.createElement('tr');
+                if (assignment.priority === 'high') row.classList.add('priority-high');
+                if (assignment.priority === 'medium') row.classList.add('priority-medium');
+                
+                row.innerHTML = `
+                    <td>${assignment.title}</td>
+                    <td>${assignment.course}</td>
+                    <td>${formatDate(assignment.dueDate)}</td>
+                    <td>${capitalizeFirstLetter(assignment.priority)}</td>
+                    <td class="status-${assignment.status}">${capitalizeFirstLetter(assignment.status)}</td>
+                    <td>
+                        ${assignment.status === 'pending' ? 
+                            `<button onclick="completeAssignment(${assignment.id})" class="btn-success">Complete</button>` : 
+                            ''}
+                        <button onclick="deleteAssignment(${assignment.id})" class="btn-danger">Delete</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function completeAssignment(id) {
+            assignments = assignments.map(assignment => {
+                if (assignment.id === id) {
+                    return {...assignment, status: 'completed'};
+                }
+                return assignment;
+            });
+            
+            saveAssignments();
+            renderAssignments();
+            updateDashboard();
+        }
+        
+        function deleteAssignment(id) {
+            assignments = assignments.filter(assignment => assignment.id !== id);
+            saveAssignments();
+            renderAssignments();
+            updateDashboard();
+        }
+        
+        function saveAssignments() {
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+        }
+        
+        // Study Session functions
+        function handleSessionSubmit(e) {
+            e.preventDefault();
+            
+            const session = {
+                id: Date.now(),
+                topic: document.getElementById('session-topic').value,
+                course: document.getElementById('session-course').value,
+                date: document.getElementById('session-date').value,
+                duration: parseInt(document.getElementById('session-duration').value),
+                notes: document.getElementById('session-notes').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            studySessions.push(session);
+            saveStudySessions();
+            renderStudySessions();
+            updateDashboard();
+            
+            // Reset form
+            sessionForm.reset();
+            document.getElementById('session-date').value = today;
+            document.getElementById('session-duration').value = '60';
+        }
+        
+        function renderStudySessions() {
+            const tbody = document.querySelector('#all-sessions tbody');
+            tbody.innerHTML = '';
+            
+            // Sort by date (newest first)
+            studySessions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            studySessions.forEach(session => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${session.topic}</td>
+                    <td>${session.course}</td>
+                    <td>${formatDate(session.date)}</td>
+                    <td>${session.duration} min</td>
+                    <td>
+                        <button onclick="deleteSession(${session.id})" class="btn-danger">Delete</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function deleteSession(id) {
+            studySessions = studySessions.filter(session => session.id !== id);
+            saveStudySessions();
+            renderStudySessions();
+            updateDashboard();
+        }
+        
+        function saveStudySessions() {
+            localStorage.setItem('studySessions', JSON.stringify(studySessions));
+        }
+        
+        // Resource functions
+        function handleResourceSubmit(e) {
+            e.preventDefault();
+            
+            const resource = {
+                id: Date.now(),
+                title: document.getElementById('resource-title').value,
+                course: document.getElementById('resource-course').value,
+                url: document.getElementById('resource-url').value,
+                type: document.getElementById('resource-type').value,
+                notes: document.getElementById('resource-notes').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            resources.push(resource);
+            saveResources();
+            renderResources();
+            
+            // Reset form
+            resourceForm.reset();
+        }
+        
+        function renderResources() {
+            const tbody = document.querySelector('#all-resources tbody');
+            tbody.innerHTML = '';
+            
+            resources.forEach(resource => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${resource.title}</td>
+                    <td>${resource.course}</td>
+                    <td>${capitalizeFirstLetter(resource.type)}</td>
+                    <td><a href="${resource.url}" target="_blank">Open</a></td>
+                    <td>
+                        <button onclick="deleteResource(${resource.id})" class="btn-danger">Delete</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function deleteResource(id) {
+            resources = resources.filter(resource => resource.id !== id);
+            saveResources();
+            renderResources();
+        }
+        
+        function saveResources() {
+            localStorage.setItem('resources', JSON.stringify(resources));
+        }
+        
+        // Dashboard functions
+        function updateDashboard() {
+            // Pending assignments count
+            const pendingAssignments = assignments.filter(a => a.status === 'pending').length;
+            document.getElementById('pending-assignments').textContent = pendingAssignments;
+            
+            // Completed sessions count
+            document.getElementById('completed-sessions').textContent = studySessions.length;
+            
+            // Total study hours
+            const totalMinutes = studySessions.reduce((sum, session) => sum + session.duration, 0);
+            const totalHours = (totalMinutes / 60).toFixed(1);
+            document.getElementById('study-hours').textContent = totalHours;
+            
+            // Weekly progress (simple example - could be enhanced)
+            const totalAssignments = assignments.length;
+            const completedAssignments = assignments.filter(a => a.status === 'completed').length;
+            const progress = totalAssignments > 0 ? Math.round((completedAssignments / totalAssignments) * 100) : 0;
+            
+            const progressBar = document.getElementById('weekly-progress');
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress}%`;
+            
+            // Upcoming assignments (next 7 days)
+            const today = new Date();
+            const nextWeek = new Date(today);
+            nextWeek.setDate(today.getDate() + 7);
+            
+            const upcoming = assignments
+                .filter(a => new Date(a.dueDate) >= today && new Date(a.dueDate) <= nextWeek && a.status === 'pending')
+                .slice(0, 5);
+                
+            const upcomingTbody = document.querySelector('#upcoming-assignments tbody');
+            upcomingTbody.innerHTML = '';
+            
+            upcoming.forEach(assignment => {
+                const row = document.createElement('tr');
+                if (assignment.priority === 'high') row.classList.add('priority-high');
+                if (assignment.priority === 'medium') row.classList.add('priority-medium');
+                
+                row.innerHTML = `
+                    <td>${assignment.title}</td>
+                    <td>${assignment.course}</td>
+                    <td>${formatDate(assignment.dueDate)}</td>
+                    <td>${capitalizeFirstLetter(assignment.priority)}</td>
+                    <td class="status-${assignment.status}">${capitalizeFirstLetter(assignment.status)}</td>
+                `;
+                
+                upcomingTbody.appendChild(row);
+            });
+            
+            // Recent study sessions (last 5)
+            const recentSessions = [...studySessions]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 5);
+                
+            const sessionsTbody = document.querySelector('#recent-sessions tbody');
+            sessionsTbody.innerHTML = '';
+            
+            recentSessions.forEach(session => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${session.topic}</td>
+                    <td>${session.course}</td>
+                    <td>${session.duration} min</td>
+                    <td>${formatDate(session.date)}</td>
+                `;
+                
+                sessionsTbody.appendChild(row);
+            });
+        }
+        
+        // Helper functions
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+        
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
+</body>
+</html>
