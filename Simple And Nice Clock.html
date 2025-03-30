@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Digital Clock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        .clock-container {
+            text-align: center;
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .clock-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .date {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #f8bbd0;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .time {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .time span {
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        .time-format {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            vertical-align: top;
+            margin-left: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .greeting {
+            font-size: 1.8rem;
+            margin-top: 1rem;
+            color: #ffffff;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            z-index: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .format-toggle {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .time {
+                font-size: 3rem;
+            }
+            .time span {
+                min-width: 45px;
+            }
+            .date {
+                font-size: 1.2rem;
+            }
+            .greeting {
+                font-size: 1.4rem;
+            }
+            .format-toggle {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="date" id="date"></div>
+        <div class="time">
+            <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+            <span class="time-format" id="time-format"></span>
+        </div>
+        <div class="greeting" id="greeting"></div>
+        <div class="format-toggle">
+            <button class="toggle-btn active" id="format-12">12-Hour Format</button>
+            <button class="toggle-btn" id="format-24">24-Hour Format</button>
+        </div>
+    </div>
+    <div class="footer">
+        Interactive Digital Clock | Made with ❤️
+    </div>
+
+    <script>
+        let timeFormat = '12'; // Default to 12-hour format
+
+        function updateClock() {
+            const now = new Date();
+            
+            // Get time components
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            // Determine AM/PM
+            const format = hours >= 12 ? 'PM' : 'AM';
+            
+            // Convert to 12-hour format if needed
+            let displayHours = hours;
+            if (timeFormat === '12') {
+                displayHours = hours % 12 || 12;
+            }
+            displayHours = displayHours.toString().padStart(2, '0');
+            
+            // Update time display
+            document.getElementById('hours').textContent = displayHours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+            
+            // Update format display
+            const formatElement = document.getElementById('time-format');
+            if (timeFormat === '12') {
+                formatElement.textContent = format;
+            } else {
+                formatElement.textContent = '';
+            }
+            
+            // Update date display
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString(undefined, options);
+            document.getElementById('date').textContent = dateStr;
+            
+            // Update greeting
+            updateGreeting(hours);
+        }
+
+        function updateGreeting(hours) {
+            let greeting = '';
+            let emoji = '';
+            
+            if (hours < 12) {
+                greeting = 'Good Morning!';
+                emoji = '🌞';
+            } else if (hours >= 12 && hours < 18) {
+                greeting = 'Good Afternoon!';
+                emoji = '☀️';
+            } else {
+                greeting = 'Good Evening!';
+                emoji = '🌙';
+            }
+            
+            document.getElementById('greeting').textContent = `${greeting} ${emoji}`;
+        }
+
+        // Toggle time format
+        document.getElementById('format-12').addEventListener('click', function() {
+            timeFormat = '12';
+            this.classList.add('active');
+            document.getElementById('format-24').classList.remove('active');
+            updateClock();
+        });
+
+        document.getElementById('format-24').addEventListener('click', function() {
+            timeFormat = '24';
+            this.classList.add('active');
+            document.getElementById('format-12').classList.remove('active');
+            updateClock();
+        });
+
+        // Update clock immediately and then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
