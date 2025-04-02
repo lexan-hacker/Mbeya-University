@@ -1,6 +1,6 @@
 # This is a simple python calculator program to do simple calculations
 
-# This project was started at 13:36 pm on 5 December 2024 .....
+# This project was started at 13:36 pm on 5 December 2024 ........
 
 print( "Welcome to Lexan Simple Calculator  \n ")
 
