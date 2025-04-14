@@ -977,7 +977,7 @@
                 clearInterval(pomodoroInterval);
                 pomodoroRunning = false;
                 
-                // Reset to current mode's default time
+                // Reset to current mode's default time in the following function
                 const activeModeBtn = document.querySelector('.pomodoro-mode-btn.active');
                 const timeInMinutes = parseInt(activeModeBtn.getAttribute('data-time'));
                 pomodoroTimeLeft = timeInMinutes * 60;
