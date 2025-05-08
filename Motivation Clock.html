@@ -315,7 +315,7 @@
                 document.documentElement.style.setProperty('--bg-gradient-2', theme.colors[1]);
                 document.documentElement.style.setProperty('--bg-gradient-3', theme.colors[2]);
                 
-                // Adjust text color based on theme brightness
+                // Adjust text color based on theme brightness ...
                 const avgBrightness = theme.colors.reduce((acc, color) => {
                     const rgb = color.match(/\w\w/g).map(x => parseInt(x, 16));
                     return acc + (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114);
