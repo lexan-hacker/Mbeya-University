@@ -354,7 +354,7 @@
                     this.secondsElement.textContent = seconds.toString().padStart(2, '0');
                     this.lastSecond = seconds;
                     
-                    // Update progress bar
+                    // Update progress bar ...
                     const progress = (seconds / 59) * 100;
                     this.progressElement.style.width = `${progress}%`;
                 }
